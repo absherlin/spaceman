@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPACEMAN88: PROTOKOL INJEKSI ELITE</title>
+    <link rel="icon" type="image/png" href="./favicon.png"> <style>
+        /* Impor font gaya terminal */
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        body {
+            font-family: 'VT323', monospace; /* Gaya font terminal */
+            background-color: #000; /* Hitam pekat */
+            color: #00FF00; /* Hijau neon */
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Mencegah scroll saat transisi */
+            position: relative;
+            /* >>>>>> BACKGROUND GAYA HACKER - DARI FILE LOKAL <<<<<< */
+            /* *** PERHATIAN: PASTIKAN FILE 'hacker_matrix.gif' ADA DI FOLDER YANG SAMA DENGAN index.html! *** */
+            background-image: url('./hacker_matrix.gif'); /* Ini GIF matrix utama kamu */
+            background-repeat: repeat; /* Biar GIF-nya diulang mengisi layar */
+            background-position: center center;
+            background-size: 150px; /* Ukuran GIF matrix kecil */
+            animation: backgroundGlitch 60s linear infinite; /* Efek glitch background */
+        }
+
+        /* Keyframes untuk efek glitch background */
+        @keyframes backgroundGlitch {
+            0% { background-position: 0% 0%; }
+            10% { background-position: 5% 5%; }
+            20% { background-position: 0% 0%; }
+            30% { background-position: -5% -5%; }
+            40% { background-position: 0% 0%; }
+            50% { background-position: 5% 5%; }
+            60% { background-position: 0% 0%; }
+            70% { background-position: -5% -5%; }
+            80% { background-position: 0% 0%; }
+            90% { background-position: 5% 5%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        /* Teks Anonymous di latar belakang */
+        .anonymous-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10em; /* Sangat besar */
+            color: rgba(255, 0, 0, 0.05); /* Merah transparan samar */
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.3); /* Merah menyala samar */
+            z-index: -1; /* Di belakang konten */
+            opacity: 0.5; /* Transparansi */
+            pointer-events: none; /* Agar tidak menghalangi klik */
+            animation: flicker 2s infinite alternate; /* Efek kedip-kedip */
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.5; }
+            50% { opacity: 0.7; }
+            100% { opacity: 0.5; }
+        }
+
+        /* Gambar Spaceman di pojok kiri atas */
+        .spaceman-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            max-width: 100px;
+            opacity: 0.7; /* Sedikit transparan */
+            z-index: 10; /* Agar di atas background dan teks Anonymous */
+        }
+
+        /* Indikator di sisi kiri */
+        .indicator-left {
+            position: absolute;
+            left: 2%; /* Lebih dekat ke tengah */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25%; /* Lebih lebar */
+            height: 70vh; /* Tinggi agar banyak baris */
+            background-color: rgba(0, 0, 0, 0.7); /* Background gelap transparan */
+            border: 1px solid #00FF00; /* Border hijau neon */
+            padding: 15px;
+            overflow-y: scroll; /* Bisa di-scroll kalau teksnya banyak */
+            text-align: left;
+            color: #00FF00; /* Hijau neon */
+            font-size: 1.1em; /* Ukuran teks lebih besar */
+            line-height: 1.3;
+            text-shadow: 0 0 5px #00FF00;
+            z-index: 5;
+            opacity: 0; /* Awalnya tersembunyi */
+            transition: opacity 0.5s ease-in-out; /* Transisi halus */
+        }
+
+        /* Indikator di sisi kanan */
+        .indicator-right {
+            position: absolute;
+            right: 2%; /* Lebih dekat ke tengah */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25%; /* Lebih lebar */
+            height: 70vh; /* Tinggi agar banyak baris */
+            background-color: rgba(0, 0, 0, 0.7); /* Background gelap transparan */
+            border: 1px solid #FF0000; /* Border merah */
+            padding: 15px;
+            overflow-y: scroll; /* Bisa di-scroll kalau teksnya banyak */
+            text-align: left;
+            color: #FF0000; /* Merah menyala */
+            font-size: 1.1em; /* Ukuran teks lebih besar */
+            line-height: 1.3;
+            text-shadow: 0 0 5px #FF0000;
+            z-index: 5;
+            opacity: 0; /* Awalnya tersembunyi */
+            transition: opacity 0.5s ease-in-out; /* Transisi halus */
+        }
+
+        /* Scrollbar styling untuk indikator */
+        .indicator-left::-webkit-scrollbar, .indicator-right::-webkit-scrollbar {
+            width: 5px;
+        }
+        .indicator-left::-webkit-scrollbar-track, .indicator-right::-webkit-scrollbar-track {
+            background: #222;
+        }
+        .indicator-left::-webkit-scrollbar-thumb, .indicator-right::-webkit-scrollbar-thumb {
+            background: #00FF00;
+            border-radius: 5px;
+        }
+        .indicator-right::-webkit-scrollbar-thumb {
+            background: #FF0000;
+            border-radius: 5px;
+        }
+
+        /* Kontainer utama (di tengah) */
+        .container-section {
+            background-color: rgba(0, 0, 0, 0.8); /* Background hitam lebih gelap transparan */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.6); /* Shadow merah menyala */
+            width: 90%;
+            max-width: 700px; /* Lebih lebar */
+            box-sizing: border-box;
+            display: none; /* Defaultnya semua disembunyikan */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Menempatkan di tengah layar */
+            border: 2px solid #FF0000; /* Border merah */
+            z-index: 10; /* Di atas background dan indikator samping */
+            transition: transform 1s ease-in-out, top 1s ease-in-out; /* Untuk animasi naik */
+        }
+
+        .container-section.active {
+            display: block; /* Yang aktif akan ditampilkan */
+            animation: fadeIn 0.5s ease-out forwards; /* Efek fade in saat muncul */
+        }
+
+        /* Animasi naik untuk container */
+        .container-section.move-up {
+            top: 15%; /* Geser ke atas */
+            transform: translate(-50%, -50%) scale(0.9); /* Sedikit kecil dan tetap di tengah x */
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5); /* Shadow berubah jadi biru/cyan */
+            border-color: #00FFFF; /* Border berubah jadi cyan */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Area coding baru di bawah container utama */
+        #phase2CodingArea {
+            position: absolute;
+            top: 60%; /* Posisi di bawah container yang sudah naik */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 700px;
+            height: 30vh; /* Tinggi untuk area kode baru */
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00FFFF; /* Border cyan */
+            padding: 15px;
+            overflow-y: scroll;
+            color: #00FFFF; /* Teks cyan */
+            text-align: left;
+            display: none; /* Hidden by default */
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            line-height: 1.3;
+            font-size: 1.1em;
+            z-index: 9; /* Di bawah container utama, di atas background */
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #phase2CodingArea.active {
+            display: block;
+            opacity: 1;
+        }
+
+        #continueButtonContainer {
+            position: absolute;
+            top: 90%; /* Di bawah phase2CodingArea */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 11; /* Di atas semuanya */
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        h1 {
+            color: #FF0000; /* Merah menyala */
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px #FF0000;
+            font-size: 2.5em;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: #00FF00; /* Hijau neon */
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px #00FF00;
+            font-size: 1.8em;
+            text-transform: uppercase;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #eee; /* Abu-abu terang */
+            line-height: 1.6;
+            text-shadow: 0 0 3px #333;
+        }
+
+        input {
+            width: calc(100% - 40px);
+            padding: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #00FF00; /* Border hijau neon */
+            border-radius: 8px;
+            background-color: #111; /* Hitam pekat */
+            color: #00FF00; /* Teks input hijau neon */
+            font-size: 1.2em;
+            text-align: center;
+            box-sizing: border-box;
+            outline: none;
+            text-shadow: 0 0 5px #00FF00;
+        }
+
+        input::placeholder {
+            color: #555; /* Warna placeholder abu-abu gelap */
+        }
+
+        /* Gaya tombol */
+        .btn {
+            background-color: #FF0000; /* Merah menyala */
+            color: #fff; /* Teks putih */
+            padding: 18px 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.3em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+            text-shadow: 1px 1px 3px #000; /* Shadow teks hitam */
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background-color: #CC0000; /* Merah lebih gelap saat hover */
+            box-shadow: 0 0 20px rgba(255, 0, 0, 1);
+            transform: scale(1.02);
+        }
+        
+        /* Efek kilat klik tombol */
+        .btn.clicked {
+            animation: buttonClickFlash 0.3s ease-out forwards;
+        }
+
+        @keyframes buttonClickFlash {
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); }
+            50% { transform: scale(0.98); box-shadow: 0 0 30px rgba(255, 255, 0, 1), 0 0 40px rgba(255, 255, 0, 0.8); /* Kilat kuning terang */ }
+            100% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); }
+        }
+
+        /* Animasi loading berputar */
+        .loading-animation {
+            border: 8px solid #222; /* Abu-abu gelap */
+            border-top: 8px solid #00FF00; /* Hijau neon */
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Teks glitch */
+        .glitch-text {
+            font-size: 1.2em;
+            color: #FFFF00; /* Kuning terang */
+            text-shadow: 0 0 8px #FFFF00;
+            animation: glitch 0.7s infinite alternate; /* Animasi glitch pada teks */
+            margin-top: 25px;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); text-shadow: 0 0 8px #FFFF00; }
+            20% { transform: translate(-2px, 1px); text-shadow: 0 0 10px #FFFF00, 1px -1px #FF0000; }
+            40% { transform: translate(1px, -2px); text-shadow: 0 0 12px #FFFF00, -1px 1px #FF0000; }
+            60% { transform: translate(-1px, 2px); text-shadow: 0 0 10px #FFFF00, 1px -1px #FF0000; }
+            80% { transform: translate(2px, -1px); text-shadow: 0 0 12px #FFFF00, -1px 1px #FF0000; }
+            100% { transform: translate(0); text-shadow: 0 0 8px #FFFF00; }
+        }
+
+        /* Pesan final di bagian bawah */
+        .final-message {
+            position: fixed; /* Fixed agar selalu di bawah */
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00FF00; /* Hijau neon */
+            font-size: 1.5em;
+            text-shadow: 0 0 10px #00FF00;
+            opacity: 0; /* Awalnya tersembunyi */
+            z-index: 100; /* Pastikan di atas elemen lain */
+            background-color: rgba(0,0,0,0.7); /* Background sedikit gelap biar kelihatan */
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: 1px solid #00FF00;
+        }
+
+        /* Animasi muncul pesan final */
+        @keyframes finalMessagePopUp {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* Tulisan "INJECTOR BY JX" */
+        .injector-signature {
+            color: #00FF00; /* Hijau neon */
+            font-size: 1.2em;
+            margin-top: 15px;
+            text-shadow: 0 0 5px #00FF00;
+        }
+
+        /* Responsive design untuk layar kecil */
+        @media (max-width: 768px) {
+            .anonymous-text {
+                font-size: 5em;
+            }
+            .spaceman-overlay {
+                max-width: 80px; /* Lebih kecil di mobile */
+                top: 10px;
+                left: 10px;
+            }
+            .indicator-left, .indicator-right {
+                font-size: 0.7em;
+                left: 1%;
+                right: 1%;
+                width: 47%; /* Menyesuaikan lebar mobile */
+                height: 50vh; /* Tinggi disesuaikan */
+                padding: 10px;
+                top: 50%; /* Reset top */
+                transform: translateY(-50%); /* Reset transform */
+            }
+            .container-section {
+                padding: 20px;
+                width: 95%;
+            }
+            .container-section.move-up {
+                top: 10%; /* Lebih naik di mobile */
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            #phase2CodingArea {
+                top: 65%; /* Sesuaikan posisi area kode baru di mobile */
+                height: 25vh;
+                width: 95%;
+            }
+            #continueButtonContainer {
+                top: 90%;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            h2 {
+                font-size: 1.4em;
+            }
+            p {
+                font-size: 0.9em;
+            }
+            input {
+                padding: 12px;
+                font-size: 1.1em;
+            }
+            .btn {
+                font-size: 1.1em;
+                padding: 12px 25px;
+            }
+            .loading-animation {
+                width: 50px;
+                height: 50px;
+            }
+            .glitch-text, .injector-signature {
+                font-size: 1em;
+            }
+            .final-message {
+                font-size: 1em;
+                padding: 8px 15px;
+                bottom: 10px;
+            }
+        }
+    </style>
+    <link rel="preload" href="https://fonts.gstatic.com/s/vt323/v17/vt323_Regular.woff2" as="font" type="font/woff2" crossorigin>
+</head>
+<body>
+
+    <div class="anonymous-text">ANONYMOUS</div>
+
+    <img src="./spaceman.webp" alt="Spaceman" class="spaceman-overlay">
+    <div class="indicator-left" id="leftIndicators">
+        </div>
+
+    <div class="indicator-right" id="rightIndicators">
+        </div>
+
+    <div id="section1" class="container-section active">
+        <h1>SPACEMAN88</h1>
+        <h2>INJECTOR NIRLANA</h2>
+        <p>Siap untuk **menembus** inti algoritma?</p>
+        <button class="btn" onclick="showSection('section2')">AKTIFKAN INJECTOR</button>
+        <p class="injector-signature">INJECTOR BY JX</p>
+    </div>
+
+    <div id="section2" class="container-section">
+        <h2>LUNCURKAN PROSES INFILTRASI</h2>
+        <p>Masukkan **identifikasi target**:</p>
+        <input type="text" id="usernameInput" placeholder="Ketikkan sandi identifikasi" required>
+        <button class="btn" onclick="startInfiltration()">MULAI INFILTRASI</button>
+        <p class="glitch-text">PERINGATAN: Jejak digital dapat terdeteksi.</p>
+        <p class="injector-signature">INJECTOR BY JX</p>
+    </div>
+
+    <div id="section3" class="container-section">
+        <div id="mainLoadingContent">
+            <h2>MENJALANKAN PROTOKOL INJEKSI...</h2>
+            <div class="loading-animation"></div>
+            <p id="generatingMessage">Memulai eksploitasi...</p>
+            <p class="injector-signature">INJECTOR BY JX</p>
+        </div>
+    </div>
+
+    <div id="phase2CodingArea">
+        </div>
+
+    <div id="continueButtonContainer">
+        <button class="btn" onclick="continueToFinalPhase()">LANJUTKAN</button>
+    </div>
+
+    <div id="section4" class="container-section">
+        <h2>INFILTRASI BERHASIL DIAMANKAN!</h2>
+        <p id="finalUsernameDisplay"></p>
+        <p>Akses tanpa batas telah **terkonfirmasi**. Kendali penuh di tangan Anda.</p>
+        <button class="btn" onclick="launchSystem(event)">AKSES SISTEM</button>
+        <p class="glitch-text">NIKMATI DOMINASI VIRTUAL!</p>
+        <p class="injector-signature">INJECTOR BY JX</p>
+    </div>
+
+    <div class="final-message" id="finalMsg">
+        !SISTEM DIREKONFIGURASI! PENGAMANAN DIBUKA!
+    </div>
+
+    <script>
+        let leftTypingInterval;
+        let rightTypingInterval;
+        let phase2TypingInterval;
+        let mainMessageInterval;
+
+        // Data kode untuk indikator kiri (simulasi log/proses)
+        const leftCodeLinesData = [
+            "> [00:00:01] INITIATING SECURE SHELL...",
+            "> [00:00:02] PROXY_CHAIN_ACTIVE: 10.5.2.1 -> 172.31.2.9 -> 203.0.113.88",
+            "> [00:00:03] AUTH_PROTOCOL_BYPASS: 0xDEADBEEF...",
+            "> [00:00:04] KERNEL_MODULE_LOADED: 'ghost_payload.ko'",
+            "> [00:00:05] MEMORY_INJECTION_ADDRESS: 0x7FFC32A1B0C0",
+            "> [00:00:06] SCANNING_VULNERABILITIES: Port 443, 80, 21...",
+            "> [00:00:07] VULNERABILITY_FOUND: CVE-2024-XXXX (Critical)",
+            "> [00:00:08] ESTABLISHING_ELEVATED_PRIVILEGES...",
+            "> [00:00:09] ROOT_ACCESS: GRANTED",
+            "> [00:00:10] DEPLOYING_REMOTE_CONTROL_MODULE...",
+            "> [00:00:11] DATA_STREAM_CAPTURE: ACTIVE",
+            "> [00:00:12] ENCRYPTED_TUNNEL: ESTABLISHED",
+            "> [00:00:13] SYSTEM_RESPONSE: SLOWED_BY_0.03%",
+            "> [00:00:14] PURGING_LOGS: PHASE_1_COMPLETE",
+            "> [00:00:15] RESOURCE_UTILIZATION: 98% (STEALTH_MODE_ACTIVE)",
+            "> [00:00:16] RECONFIGURING_FIREWALL_RULES...",
+            "> [00:00:17] INTRUSION_DETECTION_SYSTEM: DEACTIVATED",
+            "> [00:00:18] FINALIZING_INJECTION_SEQUENCE...",
+            "> [00:00:19] ALL_SYSTEMS_COMPROMISED. ACCESS_GRANTED.",
+            "> [00:00:20] SHUTTING_DOWN_EXTERNAL_TRACES. PROTOCOL_END."
+        ];
+
+        // Data kode untuk indikator kanan (simulasi respons/status)
+        const rightCodeLinesData = [
+            "--- SYSTEM OVERVIEW ---",
+            "STATUS: ACCESS DENIED",
+            "FIREWALL: ONLINE [ACTIVE]",
+            "CPU_TEMP: 45C (NORMAL)",
+            "RAM_USAGE: 65%",
+            "--- SECURITY LOG ---",
+            "ALERT: Unauthorized access attempt from 104.26.12.XXX",
+            "WARNING: Brute force detected on Port 22",
+            "CRITICAL: Kernel integrity compromised! (0x0F3D)",
+            "--- CONNECTION STATUS ---",
+            "TARGET_PORT: 443 OPEN",
+            "DATA_RECEIVING: 0 bytes/sec",
+            "--- INFILTRATION REPORT ---",
+            "MODULE_X_STATUS: DEPLOYING...",
+            "PAYLOAD_STATUS: INITIATED (0%)",
+            "SYSTEM_VITALITY: 80%",
+            "NETWORK_ACTIVITY: UNUSUAL PEAK",
+            "--- FINAL STATUS ---",
+            "MODULE_X_STATUS: ACTIVE",
+            "PAYLOAD_STATUS: ACTIVE (100%)",
+            "SYSTEM_VITALITY: 10%",
+            "NETWORK_ACTIVITY: COMPLETE"
+        ];
+
+        // Data kode untuk area coding baru (fase 2, lebih lambat)
+        const phase2CodeLinesData = [
+            "--- DEEP SCAN PROTOCOL ---",
+            "[*] Initiating sector scan: Sector Alpha [OK]",
+            "[*] Checking redundant security loops: Loop 0xAB12 [CRITICAL]",
+            "[*] Bypassing secondary authentication: Level 3 [SUCCESS]",
+            "[*] Decoding encrypted data blocks: Block 0xFFE0 [PROGRESS 30%]",
+            "[*] Searching for backdoor vulnerabilities: Admin_Panel_v2.1 [DETECTED]",
+            "[*] Injecting stealth payload: Wormhole_Elite.bin",
+            "[*] Establishing persistent connection: 0xCDCD (Hidden)",
+            "[*] Monitoring internal system fluctuations: Anomaly Detected (0.003%)",
+            "[*] Disabling automated recovery sequence: Code 8008 [SUCCESS]",
+            "[*] Mapping data structures: User_DB, Financial_Records, Log_Archives",
+            "[*] Verifying integrity of injected modules: Module_Ghost.dll [VERIFIED]",
+            "[*] Preparing for final system override: Override_Code_0xEEF2",
+            "--- CORE SYSTEM RE-CALIBRATION ---",
+            "[+] Re-routing data traffic through secure channels...",
+            "[+] Establishing new administrator credentials...",
+            "[+] Injecting false data trails: Anti-forensic measures active.",
+            "[+] Performing final system audit: All parameters set to ZERO.",
+            "[+] Process complete. Ready for transfer to control unit."
+        ];
+
+
+        // Fungsi untuk mengetikkan baris kode satu per satu dengan efek cepat/lambat
+        function typeCodeEffect(targetDivId, linesArray, delayPerLine = 70) {
+            const targetDiv = document.getElementById(targetDivId);
+            let currentLineIndex = 0;
+
+            // Bersihkan konten sebelumnya dan scroll ke atas
+            targetDiv.innerHTML = '';
+            targetDiv.scrollTop = 0;
+
+            const interval = setInterval(() => {
+                if (currentLineIndex < linesArray.length) {
+                    targetDiv.innerHTML += linesArray[currentLineIndex] + '<br>';
+                    targetDiv.scrollTop = targetDiv.scrollHeight; // Auto-scroll ke bawah
+                    currentLineIndex++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, delayPerLine);
+
+            return interval; // Kembalikan interval ID agar bisa di-clear nanti
+        }
+
+        // Fungsi untuk menampilkan section tertentu (halaman)
+        function showSection(sectionId) {
+            // Sembunyikan semua section utama
+            document.querySelectorAll('.container-section').forEach(section => section.classList.remove('active', 'move-up'));
+            // Sembunyikan area coding fase 2 dan tombol lanjutkan
+            document.getElementById('phase2CodingArea').classList.remove('active');
+            document.getElementById('continueButtonContainer').style.opacity = 0;
+
+            // Tampilkan section yang diinginkan
+            document.getElementById(sectionId).classList.add('active');
+
+            // Atur visibilitas indikator samping berdasarkan section
+            const leftIndicatorsDiv = document.getElementById('leftIndicators');
+            const rightIndicatorsDiv = document.getElementById('rightIndicators');
+
+            if (sectionId === 'section3') { // Indikator aktif di halaman loading (section3)
+                leftIndicatorsDiv.style.opacity = 1;
+                rightIndicatorsDiv.style.opacity = 1;
+            } else { // Sembunyikan di halaman lain
+                leftIndicatorsDiv.style.opacity = 0;
+                rightIndicatorsDiv.style.opacity = 0;
+                // Berhentikan efek ketik jika pindah dari section 3
+                if (leftTypingInterval) clearInterval(leftTypingInterval);
+                if (rightTypingInterval) clearInterval(rightTypingInterval);
+                if (phase2TypingInterval) clearInterval(phase2TypingInterval);
+                if (mainMessageInterval) clearInterval(mainMessageInterval); // Pastikan ini juga di-clear
+            }
+
+            // Sembunyikan pesan final setiap kali pindah section, kecuali nanti dia diaktifkan
+            document.getElementById('finalMsg').style.opacity = 0;
+            document.getElementById('finalMsg').style.animation = 'none';
+        }
+
+        // Fungsi yang dijalankan saat tombol "MULAI INFILTRASI" diklik (Fase 1 Inject)
+        function startInfiltration() {
+            const username = document.getElementById('usernameInput').value.trim();
+            if (username === "") {
+                alert("Sandi identifikasi diperlukan!");
+                return;
+            }
+            localStorage.setItem('tempUsername', username); // Simpan username
+            showSection('section3'); // Pindah ke halaman loading
+            document.getElementById('mainLoadingContent').style.display = 'block'; // Pastikan konten utama loading terlihat
+
+            document.getElementById('generatingMessage').textContent = `Menganalisis target: ${username}...`;
+
+            // Mulai efek pengetikan kode di indikator samping (cepat)
+            leftTypingInterval = typeCodeEffect('leftIndicators', leftCodeLinesData, 70); // 70ms per baris
+            rightTypingInterval = typeCodeEffect('rightIndicators', rightCodeLinesData, 70); // 70ms per baris
+
+            let progress = 0;
+            const mainMessages = [
+                "Mem建立 koneksi terenkripsi...",
+                "Mendekripsi lapisan keamanan...",
+                "Mengirimkan muatan injeksi...",
+                "Mengeksploitasi kerentanan sistem...",
+                "Menerobos otentikasi...",
+                "Memanipulasi protokol...",
+                "Menyuntikkan kode berbahaya...",
+                "Mengamankan akses root...",
+            ];
+            let currentMainMessages = mainMessages.slice(); 
+
+            // Interval untuk pesan utama (fase 1)
+            mainMessageInterval = setInterval(() => {
+                progress += 10;
+                if (currentMainMessages.length > 0) {
+                    document.getElementById('generatingMessage').textContent = currentMainMessages.shift(); // Ambil pesan utama
+                }
+
+                // Setelah semua pesan utama dan kode samping fase 1 selesai, lanjut ke fase 2
+                if (progress >= 100 && currentMainMessages.length === 0) { // Pastikan semua pesan sudah keluar
+                    clearInterval(mainMessageInterval);
+                    clearInterval(leftTypingInterval);
+                    clearInterval(rightTypingInterval);
+                    animateUpAndStartPhase2(); // Panggil fungsi transisi ke fase 2
+                }
+            }, 800); // Pesan utama berganti setiap 0.8 detik
+        }
+
+        // Fungsi transisi ke Fase 2 (Container naik dan mulai coding area baru)
+        function animateUpAndStartPhase2() {
+            const container3 = document.getElementById('section3');
+            container3.classList.add('move-up'); // Gerakkan container ke atas
+
+            setTimeout(() => {
+                // Tampilkan area coding fase 2
+                const phase2Area = document.getElementById('phase2CodingArea');
+                phase2Area.classList.add('active');
+
+                // Mulai efek pengetikan kode di area baru (lebih lambat)
+                phase2TypingInterval = typeCodeEffect('phase2CodingArea', phase2CodeLinesData, 150); // 150ms per baris (lebih lambat)
+                
+                // Reset dan mulai ulang indikator samping dengan data baru atau refresh data yang sama
+                leftTypingInterval = typeCodeEffect('leftIndicators', leftCodeLinesData.slice().reverse(), 100); // Contoh: urutan terbalik
+                rightTypingInterval = typeCodeEffect('rightIndicators', rightCodeLinesData.slice().reverse(), 100);
+
+                // Setelah area coding fase 2 selesai diketik, tampilkan tombol LANJUTKAN
+                const totalPhase2TypingTime = phase2CodeLinesData.length * 150;
+                setTimeout(() => {
+                    document.getElementById('continueButtonContainer').style.opacity = 1; // Tampilkan tombol LANJUTKAN
+                }, totalPhase2TypingTime + 500); // +500ms setelah selesai ketik
+            }, 1000); // Tunggu animasi move-up selesai (1 detik)
+        }
+
+        // Fungsi yang dijalankan saat tombol "LANJUTKAN" diklik (Fase 2 Inject)
+        function continueToFinalPhase() {
+            // Sembunyikan tombol LANJUTKAN dan area kode fase 2
+            document.getElementById('continueButtonContainer').style.opacity = 0;
+            document.getElementById('phase2CodingArea').classList.remove('active');
+            
+            // Kembalikan container utama ke posisi semula (opsional, atau biarkan di atas)
+            document.getElementById('section3').classList.remove('move-up');
+
+            // Reset pesan utama dan mulai fase verifikasi
+            document.getElementById('mainLoadingContent').style.display = 'block'; // Pastikan kembali terlihat
+            document.getElementById('generatingMessage').textContent = "Melakukan verifikasi integritas sistem...";
+
+            // Hentikan interval pengetikan sebelumnya
+            if (leftTypingInterval) clearInterval(leftTypingInterval);
+            if (rightTypingInterval) clearInterval(rightTypingInterval);
+            if (phase2TypingInterval) clearInterval(phase2TypingInterval);
+
+
+            // Mulai indikator samping dengan pesan verifikasi yang lebih singkat
+            leftTypingInterval = typeCodeEffect('leftIndicators', [
+                "> VERIFY_CHECKSUM: 0xABCDEF",
+                "> PROTOCOL_INTEGRITY: OK",
+                "> RESIDUE_CLEANUP: COMPLETE"
+            ], 200); // Agak lambat
+            rightTypingInterval = typeCodeEffect('rightIndicators', [
+                "STATUS: VERIFIED",
+                "FINAL_LOCK: ENGAGED",
+                "TRACE_ZERO: ACTIVE"
+            ], 200); // Agak lambat
+
+            // Pesan final di tengah
+            const finalCheckMessages = [
+                "Verifikasi data...",
+                "Sinkronisasi sistem...",
+                "Pembersihan jejak...",
+                "Sistem siap diakses. Menunggu perintah...", // Ini pesan terakhir di tengah
+            ];
+            let currentFinalCheckMessages = finalCheckMessages.slice();
+
+            mainMessageInterval = setInterval(() => {
+                if (currentFinalCheckMessages.length > 0) {
+                    document.getElementById('generatingMessage').textContent = currentFinalCheckMessages.shift();
+                } else {
+                    clearInterval(mainMessageInterval);
+                    clearInterval(leftTypingInterval);
+                    clearInterval(rightTypingInterval);
+
+                    // Tampilkan pesan final di bawah
+                    document.getElementById('finalMsg').style.opacity = 1;
+                    document.getElementById('finalMsg').style.animation = 'finalMessagePopUp 1s ease-out forwards';
+
+                    // Setelah jeda sebentar, pindah ke halaman sukses
+                    setTimeout(() => {
+                        document.getElementById('finalUsernameDisplay').innerHTML = `Target Diidentifikasi: <span style="color:#00FF00; text-shadow: 0 0 5px #00FF00;">${localStorage.getItem('tempUsername')}</span>`;
+                        showSection('section4');
+                    }, 2000); // Jeda 2 detik setelah pesan final muncul
+                }
+            }, 1000); // Pesan final check berganti setiap 1 detik
+        }
+
+        // Fungsi untuk mengarahkan ke halaman permainan/tujuan dengan efek kilat tombol
+        function launchSystem(event) {
+            const button = event.target;
+            button.classList.add('clicked'); // Tambahkan kelas untuk animasi kilat
+
+            // Redirect setelah efek selesai
+            setTimeout(() => {
+                window.location.href = 'https://bit2air.com/AIRBET88_SENSATIONAL';
+            }, 300); // Sesuaikan dengan durasi animasi buttonClickFlash
+        }
+
+        // Jalankan ini saat halaman dimuat pertama kali untuk memastikan section1 aktif
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('section1');
+        });
+    </script>
+</body>
+</html>
