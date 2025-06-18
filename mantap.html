@@ -394,6 +394,17 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
+        /* Button for final confirmation screen (LANJUTKAN) */
+        .btn.final-continue-btn {
+            background-color: var(--custom-blue-green-border); /* Same color as initial buttons */
+            box-shadow: 0 0 12px rgba(63, 107, 110, 0.6); /* Same shadow as initial buttons */
+            margin-top: 25px; /* More space above */
+        }
+        .btn.final-continue-btn:hover {
+            background-color: #5a8a8d;
+            box-shadow: 0 0 18px rgba(63, 107, 110, 0.9);
+        }
+
         /* Responsive adjustments */
         @media (max-width: 600px) {
             body {
@@ -509,7 +520,7 @@
                 ANDA YAKIN INGIN MELANJUTKAN ?
             </p>
             <p style="font-size: 1.1em; color: #FFD700; text-shadow: 0 0 3px #FFD700;">
-                ID ANDA BISA TERDETEKSI MELAKUKAN CHEAT DAN MENDAPATKAN SUSPEND SEBESAR 20%
+                ID ANDA BISA TERDETEKSI MELAKUKAN CHEAT DAN MENDAPATKAN SUSPEND RESIKO SEBESAR 20%
             </p>
             <button class="btn final-continue-btn" onclick="startFinalRedirectProcess()">LANJUTKAN</button>
             <button class="btn" onclick="resetApp()" style="background-color: #555; box-shadow: none; margin-top: 10px;">BATALKAN & KEMBALI</button>
@@ -672,11 +683,15 @@
 
         function showGameList(provider) {
             const usernameInput = document.getElementById('usernameInput');
-            if (usernameInput.value.trim() === "") {
-                alert("Silakan masukkan ID USERNAME Anda terlebih dahulu!");
-                return;
+            currentUsername = usernameInput.value.trim(); // Get trimmed value
+
+            // --- NEW: Username validation ---
+            if (currentUsername === "" || currentUsername.includes(' ')) {
+                alert("MASUKKAN ID ANDA YANG BENAR ! (Tanpa spasi)");
+                return; // Stop function execution
             }
-            currentUsername = usernameInput.value.trim();
+            // --- END NEW VALIDATION ---
+
             selectedProviderName = provider;
 
             document.getElementById('gameListTitle').textContent = `${provider.toUpperCase()}`;
@@ -733,7 +748,7 @@
             showGameList(selectedProviderName); 
         }
 
-        // --- NEW: Function to start the first injection loading process ---
+        // Function to start the first injection loading process
         function startFirstInjectorProcess(injectionOption) {
             const consoleDiv = document.getElementById('consoleLog');
             consoleDiv.innerHTML = ''; // Clear previous logs
@@ -756,7 +771,7 @@
                     currentLogIndex++;
                 } else {
                     clearInterval(consoleLogInterval);
-                    showSuspensionWarning(); // Changed to show confirmation warning
+                    showSuspensionWarning(); // Show confirmation warning after first loading
                 }
             }, intervalPerLog);
 
@@ -771,19 +786,19 @@
             }, totalExpectedLogTime + 1000); // 1-second buffer after logs theoretically finish
         }
 
-        // --- NEW: Function to show the suspension warning ---
+        // Function to show the suspension warning
         function showSuspensionWarning() {
             showSection('confirmationSection');
         }
 
-        // --- NEW: Function to start the final redirect process (after confirmation) ---
+        // Function to start the final redirect process (after confirmation)
         function startFinalRedirectProcess() {
             showSection('finalRedirectLoadingSection'); // Show the second loading screen
 
             // Short delay for the second loading, then redirect
             setTimeout(() => {
                 showFinalCompleteAndRedirect(); // Go to final complete message then redirect
-            }, 2000); // 2 seconds for second loading
+            }, 2000); // 2 seconds for second loading (adjust as needed)
         }
 
         // Function to show complete message and then redirect
