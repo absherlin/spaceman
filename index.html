@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="KZOeBpgAQsYWpkm1YzfzUwl8UpGrD5dNGiLSqZ3S" />
+    <title>LEADERBOARD PASJACKPOT</title>
+    <link rel="icon" href="https://psj.lapormasalah.site/logo/favicon.png" type="image/png">
+    <meta name="googlebot" content="noindex">
+    <meta name="robots" content="noindex">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://kit.fontawesome.com/fa489de302.js" crossorigin="anonymous"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        /* General Body and Container Styles */
+        body {
+            background-color: #1a1a1a;
+            color: #fff;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: url('https://i.imgur.com/XmqmrRU.jpeg');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        /* Re-applying core styles from previous example for consistency */
+        .ardframe {
+            border: 3px #FF920C groove;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #333;
+        }
+
+        .title-container {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .title {
+            text-align: center;
+        }
+
+        .title h1 {
+            font-size: 3em;
+            /* Using a gradient for a shiny gold effect */
+            background: linear-gradient(90deg, #FFD700, #FFC107, #FFD700); /* A smoother gold gradient */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.7), 0 0 15px rgba(255, 193, 7, 0.5); /* More pronounced glow */
+            margin: 0;
+            padding: 0;
+            text-transform: uppercase;
+        }
+
+        .leaderboard-logo {
+            max-width: 150px;
+            height: auto;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .marquee {
+            line-height: 30px;
+            width: 75.5%;
+            overflow: hidden;
+            position: relative;
+            height: 30px;
+            background: #000;
+            border: 1px solid #FFD700; /* Gold border */
+            border-radius: 5px;
+        }
+
+        .marquee-content {
+            position: absolute;
+            white-space: nowrap;
+            will-change: transform;
+            font-size: 16px;
+            color: #FFD700; /* Gold text */
+            animation: marquee 50s linear infinite;
+        }
+
+        @keyframes marquee {
+            from {
+                transform: translateX(55%);
+            }
+
+            to {
+                transform: translateX(-100%);
+            }
+        }
+
+        .marquee:hover .marquee-content {
+            animation-play-state: paused
+        }
+
+        /* Leaderboard Table Styles */
+        .checkpoin {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #333;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); /* Gold shadow */
+        }
+
+        .search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 3px groove #FFD700; /* Gold groove border */
+            background-color: #222;
+            color: #FFD700; /* Gold text */
+            border-radius: 10px;
+        }
+
+        .search div[role="button"] {
+            background-color: #FFD700; /* Gold background */
+            padding: 8px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .search div[role="button"] img {
+            height: 24px;
+        }
+
+        .ardboard {
+            margin-top: 20px;
+        }
+
+        .table-ard {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table-ard-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 3px groove #FFD700; /* Gold groove border */
+            border-radius: 10px;
+        }
+
+        .table-ard thead th {
+            font-family: 'Anek Latin', sans-serif;
+            text-shadow: 0 0 3px #000, 0 0 5px #000;
+            border: 3px groove #FFD700; /* Gold groove border */
+            color: #FFD700; /* Gold text */
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
+            border-radius: 10px;
+            background-color: #555;
+            padding: 15px 10px;
+            font-size: 18px !important;
+            border-bottom: 1px solid #FFD700; /* Gold bottom border */
+            filter: drop-shadow(1px 2px 6px gold);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+
+        .table-ard tbody td {
+            font-family: 'Anek Latin', sans-serif;
+            text-shadow: 0 0 3px #000, 0 0 5px #000;
+            border: 3px groove #FFD700; /* Gold groove border */
+            color: #FFD700; /* Gold text */
+            padding: 8px;
+            text-align: center;
+            vertical-align: middle;
+            border-radius: 10px;
+            height: 50px;
+        }
+
+        .table-ard tbody tr:nth-child(odd) {
+            background-color: #444;
+        }
+
+        .table-ard tbody tr:nth-child(even) {
+            background-color: #3d3d3d;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-to {
+            display: none;
+        }
+
+        .btn-depo {
+            display: none;
+        }
+
+        .layer2 {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .layer2 .ardframe.reward {
+            background-color: #333;
+            padding: 20px;
+            border: 3px groove #FFD700; /* Gold groove border */
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); /* Gold shadow */
+        }
+
+        .layer2 .ardframe.reward .btn-container {
+            margin-top: 20px;
+        }
+
+        .layer2 .ardframe.reward .ard-close {
+            border: 3px groove #FFD700; /* Gold groove border */
+            border-radius: 10px;
+            padding: 8px 15px;
+            text-shadow: 0 0 3px #000, 0 0 5px #000;
+            color: #FFD700; /* Gold text */
+            cursor: pointer;
+            background-color: #555;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 767px) {
+            .checkpoin {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .title h1 {
+                font-size: 2.2em;
+            }
+
+            .search input {
+                font-size: 0.9em;
+                padding: 6px;
+            }
+
+            .table-ard th,
+            .table-ard td {
+                font-size: 0.8em !important;
+                padding: 6px;
+            }
+
+            .marquee {
+                width: 95%;
+            }
+
+            .table-ard-container {
+                max-height: 400px;
+            }
+
+            .leaderboard-logo {
+                max-width: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="title-container">
+        <div class="title rsive">
+            <h1>LEADERBOARD</h1>
+        </div>
+        <img src="https://psj.lapormasalah.site/assets/img/logo.png" alt="PASJACKPOT Logo" class="leaderboard-logo">
+        <center style="width: 100%;">
+            <div class="marquee">
+                <div class="marquee-content">
+                    <b> RAIH REWARD POINT LEBIH BANYAK, NAIKKAN LEVEL, DAN NIKMATI BONUS SPESIAL HANYA UNTUK ANDA. MAIN SEKARANG, NIKMATI HASILNYA! </b>
+                </div>
+            </div>
+        </center>
+    </div>
+
+    <div class="ardframe rsive checkpoin">
+        <div class="search">
+            <input class="ardframe" maxlength="12" type="text" name="user" id="user" placeholder="USER ID">
+            <div role="button" type="submit" onclick="searchLeaderboard()">
+                <img src="https://wall2.airbet88-vip.com/assets/desktop/search.webp" alt="Search">
+            </div>
+        </div>
+        <main class="ardboard">
+            <div id="klasemen">
+                <div class="card-body p-1 p-lg-3 rankto onn">
+                    <div class="table-ard-container">
+                        <table class="table-ard">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <span>ID PLAYER</span>
+                                    </th>
+                                    <th>
+                                        <span>POIN</span>
+                                    </th>
+                                    <th>
+                                        <span>JOINED DATE</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div class="layer2"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center;">
+        <div class="ardframe reward"
+            style="background-color:#333; padding:20px; border:3px #FF920C groove; border-radius:10px; max-width:600px; width:90%; box-shadow:0 0 20px rgba(255,146,12,0.8);">
+            <div class="content-text">
+                <div id="carouselhadiah" class="carousel slide">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselhadiah" data-bs-slide-to="0" class="active"
+                            aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselhadiah" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                    </div>
+                    <div class="carousel-inner m-auto">
+                        <div class="carousel-item active">
+                            <img id="carouselImage1" src="" alt="1" class="desktop-image"
+                                style="max-width: 100%; height: auto; display: block; margin: auto;">
+                        </div>
+                        <div class="carousel-item">
+                            <img id="carouselImage2" src="" alt="2" class="desktop-image"
+                                style="max-width: 100%; height: auto; display: block; margin: auto;">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselhadiah"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselhadiah"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            <div class="btn-container" style="margin-top:20px;">
+                <div class="ardframe ard-close" onclick="hideRewardList()" role="button"
+                    style="border: 3px groove #FFD700; border-radius: 10px; padding: 8px 15px; text-shadow: 0 0 3px #000, 0 0 5px #000; color: #FFD700; cursor:pointer; background-color:#555;">
+                    CLOSE
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-text">
+        © 2025 PASJACKPOT - All Rights Reserved.
+    </div>
+
+    <script>
+        // --- Firebase Configuration & Initialization ---
+        // INI HARUS SAMA PERSIS DENGAN CONFIGURASI DI FILE ADMIN PANEL ANDA
+        const firebaseConfig = {
+            apiKey: "AIzaSyC5_JTdIVZUpnTirNTLCl7oRKSzi7ne_4c", // Pastikan ini sama dengan API Key Anda
+            authDomain: "absherlin-ddb58.firebaseapp.com",
+            projectId: "absherlin-ddb58",
+            storageBucket: "absherlin-ddb58.firebasestorage.app",
+            messagingSenderId: "360615330096",
+            appId: "1:360615330096:web:ddc9f4a3fb7f3af2d388f5",
+            measurementId: "G-HL1WT808N5" // Opsional, bisa dihapus jika tidak pakai Google Analytics
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = app.firestore(); // Dapatkan instance Firestore
+
+        // --- Leaderboard Data (Sekarang akan diambil dari Firestore) ---
+        let leaderboardData = [];
+
+        // --- Fungsi untuk Memformat Username (Masking) ---
+        function maskUsername(username) {
+            if (username.length <= 4) return username;
+            return username.substring(0, 2) + "***" + username.substring(username.length - 2, username.length);
+        }
+
+        // --- Fungsi untuk Menampilkan Data Leaderboard ---
+        function renderLeaderboard(dataToShow) {
+            let htmlView = '';
+            const tbody = $('.table-ard tbody');
+
+            if (dataToShow.length <= 0) {
+                htmlView += `
+                    <tr>
+                        <td colspan="3" style="border: unset; border-radius: 10px; padding: 5px; text-shadow: 0 0 3px #000000, 0 0 5px #000000; border-color: #d0a859; color: #FFD700; border: 3px groove #FFD700; ">No data.</td>
+                    </tr>`;
+            } else {
+                for (let i = 0; i < dataToShow.length; i++) {
+                    let player = dataToShow[i];
+                    htmlView +=
+                        `<tr>
+                            <td class="mb-3 table-ard-point position-relative"
+                                style="border: unset; border-radius: 10px; padding: 5px; text-shadow: 0 0 3px #000000, 0 0 5px #000000; border-color: #d0a859; color: #FFD700; border: 3px groove #FFD700;">` +
+                        maskUsername(player.username) + `</td>
+                            <td class="mb-3 table-ard-point position-relative"
+                                style="border: unset; border-radius: 10px; padding: 5px; text-shadow: 0 0 3px #000000, 0 0 5px #000000; border-color: #d0a859; color: #FFD700; border: 3px groove #FFD700;">` +
+                        player.point + `</td>
+                            <td class="mb-3 table-ard-point position-relative"
+                                style="border: unset; border-radius: 10px; padding: 5px; text-shadow: 0 0 3px #000000, 0 0 5px #000000; border-color: #d0a859; color: #FFD700; border: 3px groove #FFD700;">` +
+                        player.joined_date + `</td>
+                        </tr>`;
+                }
+            }
+            $('.table-ard tbody').html(htmlView);
+        }
+
+        // --- Fungsi Pencarian Leaderboard ---
+        function searchLeaderboard() {
+            var keyword = $('#user').val().toLowerCase();
+            let filteredData = leaderboardData.filter(player =>
+                player.username.toLowerCase().includes(keyword) ||
+                player.point.toString().includes(keyword) ||
+                player.joined_date.includes(keyword)
+            );
+            renderLeaderboard(filteredData);
+        }
+
+        // --- Fungsi untuk Mengambil Data Leaderboard dari Firestore (Real-time) ---
+        async function fetchAndRenderLeaderboard() {
+            try {
+                // onSnapshot akan memanggil callback setiap kali ada perubahan di koleksi 'players'
+                // Ini memastikan leaderboard terupdate secara real-time
+                db.collection("players").orderBy("point", "desc")
+                    .onSnapshot((querySnapshot) => {
+                        leaderboardData = [];
+                        querySnapshot.forEach((doc) => {
+                            leaderboardData.push({ id: doc.id, ...doc.data() });
+                        });
+                        // Data sudah otomatis terurut dari Firestore karena orderBy, tapi bisa di sort lagi untuk jaga-jaga
+                        leaderboardData.sort((a, b) => b.point - a.point);
+                        renderLeaderboard(leaderboardData); // Perbarui tampilan leaderboard
+                        console.log("Leaderboard updated from Firestore (real-time) for members!");
+                    }, (error) => {
+                        console.error("Error getting real-time updates from Firestore: ", error);
+                        alert('Gagal mengambil data leaderboard. Periksa konsol.');
+                    });
+            } catch (error) {
+                console.error('Error initiating Firestore listener:', error);
+                alert('Gagal terhubung ke Firestore. Periksa konfigurasi Firebase Anda.');
+            }
+        }
+
+        // --- Reward List Carousel Toggling (tetap ada meskipun tombolnya disembunyikan) ---
+        // Fungsi-fungsi ini ada jika nanti Anda ingin mengaktifkan tombol reward list lagi
+        function showRewardList() {
+            document.querySelector(".layer2").style.display = "flex";
+            document.querySelector("html").classList.add("activex2");
+            setCarouselImages();
+        }
+
+        function hideRewardList() {
+            document.querySelector(".layer2").style.display = "none";
+            document.querySelector("html").classList.remove("activex2");
+        }
+
+        function setCarouselImages() {
+            const carouselImage1 = document.getElementById('carouselImage1');
+            const carouselImage2 = document.getElementById('carouselImage2');
+            carouselImage1.src = carouselImage1.dataset.defaultSrc || "https://via.placeholder.com/400x300?text=Reward+1";
+            carouselImage2.src = carouselImage2.dataset.defaultSrc || "https://via.placeholder.com/400x300?text=Reward+2";
+            if (window.innerWidth <= 767) {
+                carouselImage1.src = "https://cdn-master.it-cg.group/MONEYSITE/AI88%20VIP/Checkpoin/AIVIP006%20B_.png";
+                carouselImage2.src = "https://cdn-master.it-cg.group/MONEYSITE/AI88%20VIP/Checkpoin/AIVIP006%20A.png";
+            } else {
+                carouselImage1.src = "https://cdn-master.it-cg.group/MONEYSITE/AI88%20VIP/Checkpoin/AIVIP006%20D.png";
+                carouselImage2.src = "https://cdn-master.it-cg.group/MONEYSITE/AI88%20VIP/Checkpoin/AIVIP006%20C.png";
+            }
+            carouselImage1.classList.add('d-block');
+            carouselImage2.classList.add('d-block');
+        }
+
+        // --- Inisialisasi Saat Dokumen Siap ---
+        $(document).ready(async function () {
+            // Panggil fungsi untuk mengambil dan merender leaderboard dari Firestore
+            await fetchAndRenderLeaderboard();
+            // setCarouselImages() dan $(window).on('resize', setCarouselImages)
+            // tidak perlu dipanggil di sini karena tidak ada tombol untuk membuka reward list di tampilan member
+            // dan gambar carousel akan diatur hanya saat showRewardList dipanggil
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
