@@ -64,10 +64,12 @@
         .title h1 {
             font-size: 3em;
             /* Using a gradient for a shiny gold effect */
-            background: linear-gradient(90deg, #FFD700, #FFC107, #FFD700); /* A smoother gold gradient */
+            background: linear-gradient(90deg, #FFD700, #FFC107, #FFD700);
+            /* A smoother gold gradient */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 8px rgba(255, 215, 0, 0.7), 0 0 15px rgba(255, 193, 7, 0.5); /* More pronounced glow */
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.7), 0 0 15px rgba(255, 193, 7, 0.5);
+            /* More pronounced glow */
             margin: 0;
             padding: 0;
             text-transform: uppercase;
@@ -88,7 +90,8 @@
             position: relative;
             height: 30px;
             background: #000;
-            border: 1px solid #FFD700; /* Gold border */
+            border: 1px solid #FFD700;
+            /* Gold border */
             border-radius: 5px;
         }
 
@@ -97,7 +100,8 @@
             white-space: nowrap;
             will-change: transform;
             font-size: 16px;
-            color: #FFD700; /* Gold text */
+            color: #FFD700;
+            /* Gold text */
             animation: marquee 50s linear infinite;
         }
 
@@ -122,7 +126,8 @@
             margin: 0 auto;
             padding: 20px;
             background-color: #333;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); /* Gold shadow */
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            /* Gold shadow */
         }
 
         .search {
@@ -134,14 +139,17 @@
         .search input {
             flex-grow: 1;
             padding: 8px;
-            border: 3px groove #FFD700; /* Gold groove border */
+            border: 3px groove #FFD700;
+            /* Gold groove border */
             background-color: #222;
-            color: #FFD700; /* Gold text */
+            color: #FFD700;
+            /* Gold text */
             border-radius: 10px;
         }
 
         .search div[role="button"] {
-            background-color: #FFD700; /* Gold background */
+            background-color: #FFD700;
+            /* Gold background */
             padding: 8px 15px;
             border-radius: 10px;
             cursor: pointer;
@@ -164,15 +172,18 @@
         .table-ard-container {
             max-height: 500px;
             overflow-y: auto;
-            border: 3px groove #FFD700; /* Gold groove border */
+            border: 3px groove #FFD700;
+            /* Gold groove border */
             border-radius: 10px;
         }
 
         .table-ard thead th {
             font-family: 'Anek Latin', sans-serif;
             text-shadow: 0 0 3px #000, 0 0 5px #000;
-            border: 3px groove #FFD700; /* Gold groove border */
-            color: #FFD700; /* Gold text */
+            border: 3px groove #FFD700;
+            /* Gold groove border */
+            color: #FFD700;
+            /* Gold text */
             padding: 10px;
             text-align: center;
             vertical-align: middle;
@@ -180,7 +191,8 @@
             background-color: #555;
             padding: 15px 10px;
             font-size: 18px !important;
-            border-bottom: 1px solid #FFD700; /* Gold bottom border */
+            border-bottom: 1px solid #FFD700;
+            /* Gold bottom border */
             filter: drop-shadow(1px 2px 6px gold);
             position: sticky;
             top: 0;
@@ -191,8 +203,10 @@
         .table-ard tbody td {
             font-family: 'Anek Latin', sans-serif;
             text-shadow: 0 0 3px #000, 0 0 5px #000;
-            border: 3px groove #FFD700; /* Gold groove border */
-            color: #FFD700; /* Gold text */
+            border: 3px groove #FFD700;
+            /* Gold groove border */
+            color: #FFD700;
+            /* Gold text */
             padding: 8px;
             text-align: center;
             vertical-align: middle;
@@ -239,11 +253,13 @@
         .layer2 .ardframe.reward {
             background-color: #333;
             padding: 20px;
-            border: 3px groove #FFD700; /* Gold groove border */
+            border: 3px groove #FFD700;
+            /* Gold groove border */
             border-radius: 10px;
             max-width: 600px;
             width: 90%;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); /* Gold shadow */
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            /* Gold shadow */
         }
 
         .layer2 .ardframe.reward .btn-container {
@@ -251,11 +267,13 @@
         }
 
         .layer2 .ardframe.reward .ard-close {
-            border: 3px groove #FFD700; /* Gold groove border */
+            border: 3px groove #FFD700;
+            /* Gold groove border */
             border-radius: 10px;
             padding: 8px 15px;
             text-shadow: 0 0 3px #000, 0 0 5px #000;
-            color: #FFD700; /* Gold text */
+            color: #FFD700;
+            /* Gold text */
             cursor: pointer;
             background-color: #555;
         }
@@ -266,6 +284,39 @@
             color: #aaa;
             font-size: 0.9em;
         }
+
+        /* --- Custom styles for the new buttons --- */
+        .contact-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 3px #FFD700 groove;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #FFD700;
+            /* Text color for the buttons */
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-shadow: 0 0 3px #000, 0 0 5px #000;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+
+        .contact-btn:hover {
+            background-color: #FFD700;
+            color: #1a1a1a;
+            /* Darker text on hover */
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+
+        /* Adjust button container for responsiveness */
+        @media (max-width: 767px) {
+            .contact-btn-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        /* --- End Custom styles for the new buttons --- */
 
         @media (max-width: 767px) {
             .checkpoin {
@@ -351,7 +402,11 @@
             </div>
 
         </main>
-    </div>
+        <div class="btn-container contact-btn-container">
+            <a href="http://vsit-us.com/LIVECHAT_PASJACKPOT" target="_blank" class="contact-btn">LIVECHAT</a>
+            <a href="http://vsit-us.com/B0NUS" target="_blank" class="contact-btn">WHATSAPP</a>
+        </div>
+        </div>
 
     <div class="layer2"
         style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center;">
